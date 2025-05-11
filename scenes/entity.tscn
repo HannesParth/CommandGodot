@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dsy2xh13gcked"]
+
+[ext_resource type="Script" uid="uid://dulmlbcl8tcn7" path="res://entity.gd" id="1_gr72c"]
+[ext_resource type="Texture2D" uid="uid://ttohxj5rjclq" path="res://icon.svg" id="1_hsfu5"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_l7g7l"]
+radius = 62.0
+height = 125.0
+
+[node name="Entity" type="Area2D" node_paths=PackedStringArray("controller_parent")]
+script = ExtResource("1_gr72c")
+controller_parent = NodePath("ControllerParent")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_hsfu5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_l7g7l")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+visible = false
+
+[node name="ControllerParent" type="Node" parent="."]

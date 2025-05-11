@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://ccrltx83qwths"]
+
+[ext_resource type="Script" uid="uid://c0tykqvjwsm2m" path="res://misc_scripts/grid_2d.gd" id="1_ci6au"]
+[ext_resource type="PackedScene" uid="uid://dsy2xh13gcked" path="res://scenes/entity.tscn" id="2_26yhd"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Grid2D" type="Node2D" parent="."]
+script = ExtResource("1_ci6au")
+cell_size = Vector2i(132, 132)
+grid_size = Vector2i(10, 10)
+grid_color = Color(1, 1, 1, 0.576471)
+metadata/_custom_type_script = "uid://c0tykqvjwsm2m"
+
+[node name="Entity" parent="Grid2D" node_paths=PackedStringArray("grid") instance=ExtResource("2_26yhd")]
+position = Vector2(64, 64)
+grid = NodePath("..")
+controller_type = 1
