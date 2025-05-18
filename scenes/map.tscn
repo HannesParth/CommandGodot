@@ -6,13 +6,19 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Grid2D" type="Node2D" parent="."]
+position = Vector2(3, 15)
+scale = Vector2(0.58, 0.58)
 script = ExtResource("1_ci6au")
 cell_size = Vector2i(132, 132)
-grid_size = Vector2i(10, 10)
+grid_size = Vector2i(15, 8)
 grid_color = Color(1, 1, 1, 0.576471)
 metadata/_custom_type_script = "uid://c0tykqvjwsm2m"
 
 [node name="Entity" parent="Grid2D" node_paths=PackedStringArray("grid") instance=ExtResource("2_26yhd")]
-position = Vector2(64, 64)
+position = Vector2(66, 66)
 grid = NodePath("..")
 controller_type = 1
+
+[node name="Entity2" parent="Grid2D" node_paths=PackedStringArray("grid") instance=ExtResource("2_26yhd")]
+position = Vector2(198, 66)
+grid = NodePath("..")

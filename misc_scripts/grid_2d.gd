@@ -2,6 +2,12 @@
 class_name Grid2D
 extends Node2D
 ## Node for drawing an in-game-visible 2D grid.
+##
+## The setters of this script check each other and redraw the grid.
+## It also has various utility functions to make the management of 
+## objects on it easier. 
+## For the purposes of this tutorial, all position management is assumed 
+## to be for the grids direct children.
 
 enum CellPosition {
 	CENTER,
@@ -34,6 +40,7 @@ enum CellPosition {
 		queue_redraw()
 
 var grid_point_size := Vector2i(128, 128)
+
 
 ## Draws the visible lines for the grid
 func _draw():
@@ -68,10 +75,11 @@ func _set_grid_pixel_size(value: Vector2i, redraw: bool) -> void:
 
 
 ## Gets the position of a given [param cell] in the grids local space 
-## depending on the given [param target] which is an enum [enum Grid2D.CellPosition].
-[br]
+## depending on the given [param target] which is an enum 
+## [enum Grid2D.CellPosition]. [br]
+## Returns [code]Vector2i(-1, -1)[/code] if the [param cell] is not on the grid.
 func get_cell_position(cell: Vector2i, target: CellPosition = CellPosition.CENTER) -> Vector2i:
-	if cell.x < 0 || cell.y < 0 || cell.x >= grid_size.x || cell.y >= grid_size.y:
+	if !is_cell_in_grid(cell):
 		push_error("Cell " + str(cell) + "is not on the grid.")
 		return Vector2i(-1, -1)
 	
@@ -91,8 +99,11 @@ func get_cell_position(cell: Vector2i, target: CellPosition = CellPosition.CENTE
 			return cell_origin  # Fallback: top-left
 
 
-# important: pos is local
-func cell_at_position(pos: Vector2) -> Vector2i:
+## Gets the grid cell at the given [param pos]. [br]
+## Returns [code]Vector2i(-1, -1)[/code] if the [param pos] is not on the grid.
+## [br][br]
+## [b]Important: [/b] pos has to be in the local space of the grid.
+func get_cell_at_position(pos: Vector2) -> Vector2i:
 	if !is_pos_on_grid(pos):
 		push_error("Position" + str(pos) + "is not on the grid.")
 		return Vector2i(-1, -1)
@@ -102,10 +113,16 @@ func cell_at_position(pos: Vector2) -> Vector2i:
 	return Vector2i(cell_x, cell_y)
 
 
-# important: point is local
-func snap_to_cell(point: Vector2, target: CellPosition = CellPosition.CENTER) -> Vector2i:
+## Snaps a given [param point] to a [param target] position of the cell
+## the point is inside of.
+## Returns [code]Vector2i(-1, -1)[/code] if the [param point] is not on the grid.
+## [br][br]
+## [b]Important: [/b] point has to be in the local space of the grid.
+func snap_point_to_cell(
+		point: Vector2, 
+		target: CellPosition = CellPosition.CENTER) -> Vector2i:
 	if !is_pos_on_grid(point):
-		push_error("Point {point} is not on the grid.")
+		push_error("point" + str(point) + "is not on the grid.")
 		return Vector2i(0, 0)
 	
 	var cell_x = int(point.x / cell_size.x)
@@ -132,3 +149,10 @@ func is_pos_on_grid(pos: Vector2) -> bool:
 		&& pos.y > 0 
 		&& pos.x < grid_point_size.x 
 		&& pos.y < grid_point_size.y)
+
+
+func is_cell_in_grid(cell: Vector2i) -> bool:
+	return (cell.x >= 0 
+	&& cell.y >= 0 
+	&& cell.x < grid_size.x 
+	&& cell.y < grid_size.y)

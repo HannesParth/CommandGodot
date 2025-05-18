@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dsy2xh13gcked"]
+[gd_scene load_steps=7 format=3 uid="uid://dsy2xh13gcked"]
 
 [ext_resource type="Script" uid="uid://dulmlbcl8tcn7" path="res://entity.gd" id="1_gr72c"]
 [ext_resource type="Texture2D" uid="uid://ttohxj5rjclq" path="res://icon.svg" id="1_hsfu5"]
@@ -7,9 +7,24 @@
 radius = 62.0
 height = 125.0
 
-[node name="Entity" type="Area2D" node_paths=PackedStringArray("controller_parent")]
+[sub_resource type="Curve" id="Curve_m0cyi"]
+_limits = [0.0, 100.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.810997, 35.1826), 122.06, 122.06, 0, 0, Vector2(1, 100), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_gr72c"]
+_data = [Vector2(0, 0.205758), 0.0, 0.0, 0, 0, Vector2(0.697595, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.205758), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_gr72c"]
+
+[node name="Entity" type="Area2D" node_paths=PackedStringArray("controller_parent", "arrow_line", "sprite", "particles")]
 script = ExtResource("1_gr72c")
 controller_parent = NodePath("ControllerParent")
+arrow_line = NodePath("ArrowLine")
+sprite = NodePath("Sprite2D")
+particles = NodePath("CPUParticles2D")
+colors = Array[Color]([Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(0, 1, 0, 1), Color(0, 0, 1, 1), Color(1, 1, 0, 1), Color(1, 0, 1, 1), Color(0, 1, 1, 1)])
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_hsfu5")
@@ -21,3 +36,28 @@ shape = SubResource("CapsuleShape2D_l7g7l")
 visible = false
 
 [node name="ControllerParent" type="Node" parent="."]
+
+[node name="ArrowLine" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(0, 0, 0, 100, -25, 75, 25, 75, 0, 100)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 100
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+emission_shape = 2
+emission_sphere_radius = 25.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 120.0
+damping_curve = SubResource("Curve_m0cyi")
+scale_amount_min = 3.0
+scale_amount_max = 6.0
+scale_amount_curve = SubResource("Curve_gr72c")
+color_ramp = SubResource("Gradient_gr72c")
