@@ -1,5 +1,9 @@
 class_name PerPlayerController
 extends PerEntityController
+## Player input based implementation of the [PerEntityController].
+##
+## This implementation takes the players input through the [method Node._input]
+## method trigger the execution of the [PerMovementCommand] and [PerColorCommand].
 
 
 func _input(event: InputEvent) -> void:

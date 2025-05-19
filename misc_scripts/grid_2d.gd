@@ -9,6 +9,7 @@ extends Node2D
 ## For the purposes of this tutorial, all position management is assumed 
 ## to be for the grids direct children.
 
+
 enum CellPosition {
 	CENTER,
 	TOP_LEFT,
@@ -17,29 +18,36 @@ enum CellPosition {
 	BOTTOM_RIGHT,
 }
 
-@export var cell_size := Vector2i(32, 32) :
+## The pixel size of one of the grids cells
+@export var cell_size := Vector2i(32, 32):
 	set (value):
 		cell_size = value if value > Vector2i(0, 0) else Vector2i(16, 16)
 		_set_grid_pixel_size(grid_size * cell_size, false)
 		queue_redraw()
 
-@export var grid_size := Vector2i(4, 4) :
+## Size of the grid in number of cells
+@export var grid_size := Vector2i(4, 4):
 	set (value):
 		grid_size = value
 		_set_grid_pixel_size(value * cell_size, false)
 		queue_redraw()
 
-@export var grid_color := Color(1, 1, 1, 0.2) :
+@export var grid_color := Color(1, 1, 1, 0.2):
 	set (value):
 		grid_color = value
 		queue_redraw()
 
-@export var line_width: float = -1.0 :
+## Width of the drawn grid lines in pixels. [br]
+## Draws a two-point-primitive if the value is negative, which is displayed
+## with a constant width regardless of scale. See [method CanvasItem.draw_line]
+@export var line_width: float = -1.0:
 	set (value):
 		line_width = value if value != 0 else -1.0
 		queue_redraw()
 
-var grid_point_size := Vector2i(128, 128)
+## The pixel size of the whole grid. Gets updated in the setters of 
+## [member Grid2D.cell_size] and [member Grid2D.grid_size]
+var grid_pixel_size := Vector2i(128, 128)
 
 
 ## Draws the visible lines for the grid
@@ -48,17 +56,17 @@ func _draw():
 	if line_width != -1.0:
 		modifier = line_width / 2
 	
-	for x in range(0, grid_point_size.x + 1, cell_size.x):
+	for x in range(0, grid_pixel_size.x + 1, cell_size.x):
 		draw_line(
 			Vector2(x, -modifier), 
-			Vector2(x, grid_point_size.y + modifier), 
+			Vector2(x, grid_pixel_size.y + modifier), 
 			grid_color, 
 			line_width)
 	
-	for y in range(0, grid_point_size.y + 1, cell_size.y):
+	for y in range(0, grid_pixel_size.y + 1, cell_size.y):
 		draw_line(
 			Vector2(-modifier, y), 
-			Vector2(grid_point_size.x + modifier, y), 
+			Vector2(grid_pixel_size.x + modifier, y), 
 			grid_color, 
 			line_width)
 
@@ -68,7 +76,7 @@ func _draw():
 func _set_grid_pixel_size(value: Vector2i, redraw: bool) -> void:
 	var adjusted_x = max(cell_size.x, int(value.x / cell_size.x) * cell_size.x)
 	var adjusted_y = max(cell_size.y, int(value.y / cell_size.y) * cell_size.y)
-	grid_point_size = Vector2i(adjusted_x, adjusted_y)
+	grid_pixel_size = Vector2i(adjusted_x, adjusted_y)
 	
 	if redraw:
 		queue_redraw()
@@ -147,8 +155,8 @@ func snap_point_to_cell(
 func is_pos_on_grid(pos: Vector2) -> bool:
 	return (pos.x > 0 
 		&& pos.y > 0 
-		&& pos.x < grid_point_size.x 
-		&& pos.y < grid_point_size.y)
+		&& pos.x < grid_pixel_size.x 
+		&& pos.y < grid_pixel_size.y)
 
 
 func is_cell_in_grid(cell: Vector2i) -> bool:
