@@ -10,8 +10,10 @@ extends Area2D
 
 
 enum ControllerType {
-	AI,
-	PLAYER
+	PER_AI,
+	PER_PLAYER,
+	DIS_AI,
+	DIS_PLAYER
 }
 
 @export_category("Refs")
@@ -24,7 +26,7 @@ enum ControllerType {
 @export_category("Config")
 @export var enable: bool = true
 @export var move_duration: float = 0.3
-@export var controller_type: ControllerType = ControllerType.AI
+@export var controller_type: ControllerType = ControllerType.PER_AI
 @export var colors: Array[Color]
 
 @export_category("Tweens")
@@ -33,7 +35,7 @@ enum ControllerType {
 @export var arrow_transition: Tween.TransitionType
 @export var arrow_ease: Tween.EaseType
 
-var current_controller: PerEntityController
+var current_controller: Node
 
 var is_moving: bool = false
 
@@ -70,10 +72,17 @@ func _set_controller_type(value: ControllerType) -> void:
 		child.queue_free()
 	
 	controller_type = value
-	if controller_type == ControllerType.AI:
-		current_controller = PerAIController.new(self)
-	else:
-		current_controller = PerPlayerController.new(self)
+	match value:
+		ControllerType.PER_AI:
+			current_controller = PerAIController.new(self)
+		ControllerType.PER_PLAYER:
+			current_controller = PerPlayerController.new(self)
+		ControllerType.DIS_AI:
+			# TODO: Implement
+			print_debug("Discrete AI Controller not yet implemented")
+			return
+		ControllerType.DIS_PLAYER:
+			current_controller = DisPlayerController.new(self)
 	
 	controller_parent.add_child(current_controller)
 

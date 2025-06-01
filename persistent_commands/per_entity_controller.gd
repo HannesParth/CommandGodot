@@ -1,6 +1,6 @@
 class_name PerEntityController
 extends Node
-## Base class for [Entity] Controllers.
+## Base class for [Entity] Controllers based on persistent commands.
 ##
 ## Extend this class for controller implementations. [br]
 ## This class would be [code]abstract[/code] if that were possible

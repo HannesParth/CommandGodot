@@ -15,6 +15,10 @@ run/main_scene="uid://ccrltx83qwths"
 config/features=PackedStringArray("4.4", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+UndoManager="*res://discrete_commands/undo_manager.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/bbcode_edit.editor/plugin.cfg")
