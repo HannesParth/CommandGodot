@@ -13,11 +13,12 @@ config_version=5
 config/name="Command Tutorial"
 run/main_scene="uid://ccrltx83qwths"
 config/features=PackedStringArray("4.4", "Mobile")
-config/icon="res://icon.svg"
+config/icon="res://images/icon.svg"
 
 [autoload]
 
 UndoManager="*res://discrete_commands/undo_manager.gd"
+ExecutionManager="*res://misc_scripts/execution_manager.gd"
 
 [editor_plugins]
 
@@ -27,6 +28,7 @@ enabled=PackedStringArray("res://addons/bbcode_edit.editor/plugin.cfg")
 
 folder_colors={
 "res://discrete_commands/": "red",
+"res://images/": "green",
 "res://misc_scripts/": "purple",
 "res://persistent_commands/": "yellow",
 "res://scenes/": "pink"

@@ -10,8 +10,8 @@ func _init(entity: Entity) -> void:
 
 
 func execute() -> void:
-	pass
+	push_error("Command execute not implemented")
 
 
 func reverse() -> void:
-	pass
+	push_error("Command reverse not implemented")

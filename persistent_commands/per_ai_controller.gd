@@ -31,6 +31,9 @@ func _ready() -> void:
 
 
 func _perform_action() -> void:
+	if !entity.enable:
+		return
+	
 	var actions: Array[Callable] = [_move, _send_color_command]
 	var random := actions.pick_random() as Callable
 	random.call()

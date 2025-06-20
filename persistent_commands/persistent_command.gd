@@ -12,5 +12,6 @@ extends RefCounted
 ## [method PersistentCommand.execute] method.
 
 
+@warning_ignore("unused_parameter")
 func execute(entity: Entity, data: Object = null) -> void:
-	pass
+	push_error("Command execute not implemented")

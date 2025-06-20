@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdtq53gl2yra1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mps5r"]
+bg_color = Color(0.212305, 0.212305, 0.212305, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="IndexIndicator" type="Panel"]
+offset_right = 15.0
+offset_bottom = 15.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mps5r")

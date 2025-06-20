@@ -40,6 +40,11 @@ var current_controller: Node
 var is_moving: bool = false
 
 
+
+func _enter_tree() -> void:
+	ExecutionManager.register(self)
+
+
 func _ready() -> void:
 	# Null-assert all needed references and properties
 	assert(grid)
@@ -91,7 +96,7 @@ func _set_controller_type(value: ControllerType) -> void:
 ## Does not move if the direction is off the grid, if it is currently 
 ## moving, or if it is disabled.
 func move(dir: Vector2i) -> void:
-	if is_moving || !enable:
+	if is_moving:
 		return
 	
 	var current_cell: Vector2i = grid.get_cell_at_position(position)
@@ -113,8 +118,6 @@ func move(dir: Vector2i) -> void:
 ## and starts it. [br]
 ## Does nothing if the [Entity] is disabled.
 func set_sprite_color(col: Color) -> void:
-	if !enable:
-		return
 	particles.color_ramp.set_color(0, sprite.self_modulate)
 	particles.color_ramp.set_color(1, col)
 	particles.restart()

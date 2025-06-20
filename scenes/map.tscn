@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://ccrltx83qwths"]
+[gd_scene load_steps=4 format=3 uid="uid://ccrltx83qwths"]
 
 [ext_resource type="Script" uid="uid://c0tykqvjwsm2m" path="res://misc_scripts/grid_2d.gd" id="1_ci6au"]
 [ext_resource type="PackedScene" uid="uid://dsy2xh13gcked" path="res://scenes/entity.tscn" id="2_26yhd"]
+[ext_resource type="PackedScene" uid="uid://bxkgmqigu3elo" path="res://scenes/undo_menu.tscn" id="3_p3ir5"]
 
-[node name="Node2D" type="Node2D"]
+[node name="Map" type="Node2D"]
 
 [node name="Grid2D" type="Node2D" parent="."]
 position = Vector2(3, 15)
@@ -17,8 +18,12 @@ metadata/_custom_type_script = "uid://c0tykqvjwsm2m"
 [node name="Entity" parent="Grid2D" node_paths=PackedStringArray("grid") instance=ExtResource("2_26yhd")]
 position = Vector2(66, 66)
 grid = NodePath("..")
-controller_type = 1
+controller_type = 3
 
 [node name="Entity2" parent="Grid2D" node_paths=PackedStringArray("grid") instance=ExtResource("2_26yhd")]
 position = Vector2(198, 66)
 grid = NodePath("..")
+enable = false
+
+[node name="UndoMenu" parent="." instance=ExtResource("3_p3ir5")]
+visible = false

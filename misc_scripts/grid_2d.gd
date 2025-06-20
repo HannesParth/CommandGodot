@@ -74,7 +74,9 @@ func _draw():
 ## Sets the pixel size of the grid to [param value]. [br]
 ## Snaps the actual value to a multiple of [member Grid2D.cell_size]
 func _set_grid_pixel_size(value: Vector2i, redraw: bool) -> void:
+	@warning_ignore("integer_division")
 	var adjusted_x = max(cell_size.x, int(value.x / cell_size.x) * cell_size.x)
+	@warning_ignore("integer_division")
 	var adjusted_y = max(cell_size.y, int(value.y / cell_size.y) * cell_size.y)
 	grid_pixel_size = Vector2i(adjusted_x, adjusted_y)
 	

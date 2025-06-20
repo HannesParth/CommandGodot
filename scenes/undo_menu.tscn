@@ -1,0 +1,102 @@
+[gd_scene load_steps=7 format=3 uid="uid://bxkgmqigu3elo"]
+
+[ext_resource type="Texture2D" uid="uid://u376ee1l1qdd" path="res://images/skip_previous_64dp.svg" id="1_1ytj7"]
+[ext_resource type="Script" uid="uid://cb3flmg2w4527" path="res://discrete_commands/undo_menu.gd" id="1_xy0p8"]
+[ext_resource type="PackedScene" uid="uid://cdtq53gl2yra1" path="res://scenes/index_indicator.tscn" id="2_2nki5"]
+[ext_resource type="Texture2D" uid="uid://be2r03ychhbft" path="res://images/pause_64dp.svg" id="2_xy0p8"]
+[ext_resource type="Texture2D" uid="uid://bgg5rrgjn5k4p" path="res://images/play_arrow_64dp.svg" id="3_2nki5"]
+[ext_resource type="Texture2D" uid="uid://bok8s61446sds" path="res://images/skip_next_64dp.svg" id="4_a15uh"]
+
+[node name="UndoMenu" type="CanvasLayer" node_paths=PackedStringArray("play_button", "pause_button", "next_button", "previous_button", "array_elements_parent", "index_indicator")]
+script = ExtResource("1_xy0p8")
+play_button = NodePath("BottomBar/ButtonMarginContainer/HBoxContainer/PlayButton")
+pause_button = NodePath("BottomBar/ButtonMarginContainer/HBoxContainer/PauseButton")
+next_button = NodePath("BottomBar/ButtonMarginContainer/HBoxContainer/NextButton")
+previous_button = NodePath("BottomBar/ButtonMarginContainer/HBoxContainer/PreviousButton")
+array_elements_parent = NodePath("BottomBar/BottomBarVBoxContainer/ArrayMarginContainer/ElementsHBoxContainer")
+index_indicator = NodePath("BottomBar/BottomBarVBoxContainer/ArrayMarginContainer/IndexerMarginContainer/IndexIndicatorParent/IndexIndicator")
+
+[node name="BottomBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -120.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ButtonMarginContainer" type="MarginContainer" parent="BottomBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_bottom = 60
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomBar/ButtonMarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="PreviousButton" type="Button" parent="BottomBar/ButtonMarginContainer/HBoxContainer"]
+layout_mode = 2
+tooltip_text = "If you click this faster than the action can execute,
+the command will be \"swallowed\""
+icon = ExtResource("1_1ytj7")
+
+[node name="PauseButton" type="Button" parent="BottomBar/ButtonMarginContainer/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("2_xy0p8")
+
+[node name="PlayButton" type="Button" parent="BottomBar/ButtonMarginContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+icon = ExtResource("3_2nki5")
+
+[node name="NextButton" type="Button" parent="BottomBar/ButtonMarginContainer/HBoxContainer"]
+layout_mode = 2
+tooltip_text = "If you click this faster than the action can execute, 
+the command will be \"swallowed\""
+icon = ExtResource("4_a15uh")
+
+[node name="BottomBarVBoxContainer" type="VBoxContainer" parent="BottomBar"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -54.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ArrayMarginContainer" type="MarginContainer" parent="BottomBar/BottomBarVBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 220
+
+[node name="ElementsHBoxContainer" type="HBoxContainer" parent="BottomBar/BottomBarVBoxContainer/ArrayMarginContainer"]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="BottomBar/BottomBarVBoxContainer/ArrayMarginContainer/ElementsHBoxContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="BottomBar/BottomBarVBoxContainer/ArrayMarginContainer/ElementsHBoxContainer/Panel"]
+layout_mode = 0
+offset_left = 4.075
+offset_top = 1.17
+offset_right = 44.075
+offset_bottom = 24.17
+theme_override_font_sizes/font_size = 12
+text = "0"
+
+[node name="IndexerMarginContainer" type="MarginContainer" parent="BottomBar/BottomBarVBoxContainer/ArrayMarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="IndexIndicatorParent" type="Control" parent="BottomBar/BottomBarVBoxContainer/ArrayMarginContainer/IndexerMarginContainer"]
+layout_mode = 2
+
+[node name="IndexIndicator" parent="BottomBar/BottomBarVBoxContainer/ArrayMarginContainer/IndexerMarginContainer/IndexIndicatorParent" instance=ExtResource("2_2nki5")]
+layout_mode = 0

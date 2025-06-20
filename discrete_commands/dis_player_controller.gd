@@ -8,6 +8,8 @@ extends DisEntityController
 func _input(event: InputEvent) -> void:
 	if event.is_echo():
 		return
+	if !entity.enable:
+		return
 
 	var command: DiscreteCommand
 	if event.is_action_pressed("up"):
@@ -28,3 +30,4 @@ func _input(event: InputEvent) -> void:
 	command.execute()
 	
 	# Add created command instance to list of executed commands
+	UndoManager.add_executed(command)
