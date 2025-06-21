@@ -12,16 +12,25 @@ func _input(event: InputEvent) -> void:
 		return
 
 	var command: DiscreteCommand
+	var direction = Vector2i(-2, -2)
 	if event.is_action_pressed("up"):
-		command = DisMovementCommand.new(entity, Vector2i.UP)
+		direction = Vector2i.UP
 	elif event.is_action_pressed("down"):
-		command = DisMovementCommand.new(entity, Vector2i.DOWN)
+		direction = Vector2i.DOWN
 	elif event.is_action_pressed("left"):
-		command = DisMovementCommand.new(entity, Vector2i.LEFT)
+		direction = Vector2i.LEFT
 	elif event.is_action_pressed("right"):
-		command = DisMovementCommand.new(entity, Vector2i.RIGHT)
+		direction = Vector2i.RIGHT
 	elif event.is_action_pressed("color"):
 		command = _send_color_command()
+	
+	# If the direction has been set and the entity can move in that 
+	# direction, create the movement command.
+	if direction != Vector2i(-2, -2):
+		if !entity.can_move_in_direction(direction):
+			return
+		else:
+			command = DisMovementCommand.new(entity, direction)
 	
 	if command == null:
 		return

@@ -56,10 +56,6 @@ func _ready() -> void:
 	assert(colors.size() > 0)
 	assert(colors.has(Color.WHITE))
 	
-	# Assign the particle systems color_ramp a new Gradient Resource.
-	# Otherwise, all Entities access the same Resource.
-	particles.color_ramp = Gradient.new()
-	
 	# Make sure the arrow line is hidden
 	arrow_line.hide()
 	
@@ -83,9 +79,7 @@ func _set_controller_type(value: ControllerType) -> void:
 		ControllerType.PER_PLAYER:
 			current_controller = PerPlayerController.new(self)
 		ControllerType.DIS_AI:
-			# TODO: Implement
-			print_debug("Discrete AI Controller not yet implemented")
-			return
+			current_controller = DisAIController.new(self)
 		ControllerType.DIS_PLAYER:
 			current_controller = DisPlayerController.new(self)
 	
@@ -111,6 +105,15 @@ func move(dir: Vector2i) -> void:
 	
 	_tween_movement(target)
 	_tween_arrow(dir)
+
+
+## Checks wether there is a grid cell in the given direction.
+## For use by the [member Entity.current_controller] to prevent
+## the creation of unusable commands.
+func can_move_in_direction(dir: Vector2i) -> bool:
+	var current_cell: Vector2i = grid.get_cell_at_position(position)
+	var new_cell: Vector2i = current_cell + dir
+	return grid.is_cell_in_grid(new_cell)
 
 
 ## Sets the [member CanvasItem.self_modulate] of the [Entity]s [member Entity.sprite]. [br]

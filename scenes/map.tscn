@@ -23,7 +23,7 @@ controller_type = 3
 [node name="Entity2" parent="Grid2D" node_paths=PackedStringArray("grid") instance=ExtResource("2_26yhd")]
 position = Vector2(198, 66)
 grid = NodePath("..")
-enable = false
+controller_type = 2
 
 [node name="UndoMenu" parent="." instance=ExtResource("3_p3ir5")]
 visible = false

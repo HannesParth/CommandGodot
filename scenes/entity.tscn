@@ -17,6 +17,7 @@ _data = [Vector2(0, 0.205758), 0.0, 0.0, 0, 0, Vector2(0.697595, 1), 0.0, 0.0, 0
 point_count = 3
 
 [sub_resource type="Gradient" id="Gradient_gr72c"]
+resource_local_to_scene = true
 
 [node name="Entity" type="Area2D" node_paths=PackedStringArray("controller_parent", "arrow_line", "sprite", "particles")]
 script = ExtResource("1_gr72c")

@@ -25,5 +25,5 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action_pressed("color"):
 		_send_color_command()
 	
-	if params != null:
+	if params != null && entity.can_move_in_direction(params.direction):
 		movement_command.execute(entity, params)

@@ -1,10 +1,5 @@
-class_name PerAIController
-extends PerEntityController
-## Very simple non-player implementation of the [PerEntityController].
-##
-## This implementation performs random actions for the controlled [Entity]
-## based on a [Timer]. For this tutorial, it either moves the entity directly
-## up, down, left or right, or changes the entities color.
+class_name DisAIController
+extends DisEntityController
 
 
 ## The time between actions in seconds.
@@ -36,13 +31,18 @@ func _perform_action() -> void:
 	
 	var actions: Array[Callable] = [_move, _send_color_command]
 	var random := actions.pick_random() as Callable
-	random.call()
+	var command: DiscreteCommand = random.call()
+	
+	# Execute command
+	command.execute()
+	
+	# Add created command instance to list of executed commands
+	UndoManager.add_executed(command)
 
 
-func _move() -> void:
+func _move() -> DisMovementCommand:
 	var dir: Vector2i = _get_viable_directions().pick_random()
-	var params = PerMovementCommand.Params.new(dir)
-	movement_command.execute(entity, params)
+	return DisMovementCommand.new(entity, dir)
 
 
 func _get_viable_directions() -> Array[Vector2i]:
