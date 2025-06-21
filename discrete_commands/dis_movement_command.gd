@@ -1,5 +1,6 @@
 class_name DisMovementCommand
 extends DiscreteCommand
+## Implementation of the [DiscreteCommand] to call [Entity] movement.
 
 
 var _direction: Vector2i

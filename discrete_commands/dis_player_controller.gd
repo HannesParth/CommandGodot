@@ -3,6 +3,8 @@ extends DisEntityController
 ## Player input based implementation of the [DisEntityController].
 ##
 ## This implementation takes the players input through the [method Node._input]
+## method to create [DiscreteCommand] instances, which are then executed and 
+## added to the Undo Stack.
 
 
 func _input(event: InputEvent) -> void:

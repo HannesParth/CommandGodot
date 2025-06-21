@@ -15,7 +15,7 @@ func _init(e: Entity) -> void:
 	self.entity = e
 
 
-## Private function to call the [DisColorCommand] execution. [br]
+## Private function to crate a new [DisColorCommand] instance. [br]
 ## Makes sure the new color is different than the current one.
 func _send_color_command() -> DisColorCommand:
 	var newColor: Color = entity.colors.pick_random()

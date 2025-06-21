@@ -3,13 +3,13 @@ extends PerEntityController
 ## Player input based implementation of the [PerEntityController].
 ##
 ## This implementation takes the players input through the [method Node._input]
-## method to trigger the execution of the [PerMovementCommand] and [PerColorCommand].
+## method to trigger the execution of the [PersistentCommand].
 
 
 func _input(event: InputEvent) -> void:
 	if event.is_echo():
 		return
-	if entity.enable:
+	if !entity.enable:
 		return
 
 	var params: PerMovementCommand.Params

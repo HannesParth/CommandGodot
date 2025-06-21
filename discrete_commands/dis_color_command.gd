@@ -1,5 +1,10 @@
 class_name DisColorCommand
 extends DiscreteCommand
+## Implementation of the [DiscreteCommand] to change the color of the entities
+## [Sprite2D]
+##
+## It needs properties for both the color picked by the [Entity] and the color
+## it had before the change to perform the reverse change.
 
 
 var _picked_color: Color

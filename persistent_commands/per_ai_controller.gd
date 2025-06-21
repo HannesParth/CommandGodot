@@ -3,8 +3,8 @@ extends PerEntityController
 ## Very simple non-player implementation of the [PerEntityController].
 ##
 ## This implementation performs random actions for the controlled [Entity]
-## based on a [Timer]. For this tutorial, it either moves the entity directly
-## up, down, left or right, or changes the entities color.
+## based on a [Timer]. For this tutorial, it either moves the entity in a 
+## random direction or changes the entities color.
 
 
 ## The time between actions in seconds.

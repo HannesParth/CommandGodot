@@ -1,5 +1,9 @@
 class_name UndoMenu
 extends CanvasLayer
+## Management class for the Undo Menu Scene.
+##
+## Manages functionality and display of the Play, Pause, Undo and Redo
+## buttons, and the visualization of the Undo Stack below them.
 
 
 @export_group("Refs")

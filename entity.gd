@@ -16,20 +16,20 @@ enum ControllerType {
 	DIS_PLAYER
 }
 
-@export_category("Refs")
+@export_group("Refs")
 @export var grid: Grid2D
 @export var controller_parent: Node
 @export var arrow_line: Line2D
 @export var sprite: Sprite2D
 @export var particles: CPUParticles2D
 
-@export_category("Config")
+@export_group("Config")
 @export var enable: bool = true
 @export var move_duration: float = 0.3
 @export var controller_type: ControllerType = ControllerType.PER_AI
 @export var colors: Array[Color]
 
-@export_category("Tweens")
+@export_group("Tweens")
 @export var move_transition: Tween.TransitionType = Tween.TransitionType.TRANS_BACK
 @export var move_ease: Tween.EaseType = Tween.EaseType.EASE_IN_OUT
 @export var arrow_transition: Tween.TransitionType
@@ -87,8 +87,8 @@ func _set_controller_type(value: ControllerType) -> void:
 
 
 ## Moves the [Entity] in the given direction on the grid. [br]
-## Does not move if the direction is off the grid, if it is currently 
-## moving, or if it is disabled.
+## Does not move if the direction is off the grid or if it is currently 
+## moving.
 func move(dir: Vector2i) -> void:
 	if is_moving:
 		return

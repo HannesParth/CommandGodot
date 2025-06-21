@@ -1,5 +1,10 @@
 class_name DisAIController
 extends DisEntityController
+## Very simple non-player implementation of the [DisEntityController].
+##
+## This implementation performs random actions for the controlled [Entity]
+## based on a [Timer]. For this tutorial, it either moves the entity in a 
+## random direction or changes the entities color.
 
 
 ## The time between actions in seconds.
@@ -16,6 +21,8 @@ var directions: Array[Vector2i] = [
 	Vector2i.RIGHT,
 ]
 
+
+## Setting up the [member DisAIController.action_timer]
 func _ready() -> void:
 	action_timer = Timer.new()
 	action_timer.one_shot = false
@@ -25,6 +32,8 @@ func _ready() -> void:
 	action_timer.start()
 
 
+## Gets a random commands from the given actions, executes it
+## and adds it to the Undo Stack.
 func _perform_action() -> void:
 	if !entity.enable:
 		return
