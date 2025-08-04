@@ -16,7 +16,7 @@ func _ready() -> void:
 
 func _activate_undo_menu_if_used() -> void:
 	if _entites.keys().any(_entity_uses_discrete_commands):
-		var undo_menu = get_node("/root/Map/UndoMenu")
+		var undo_menu: CanvasLayer = get_node("/root/Map/UndoMenu")
 		
 		undo_menu.show()
 

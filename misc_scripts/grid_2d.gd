@@ -51,7 +51,7 @@ var grid_pixel_size := Vector2i(128, 128)
 
 
 ## Draws the visible lines for the grid
-func _draw():
+func _draw() -> void:
 	var modifier: float = 0
 	if line_width != -1.0:
 		modifier = line_width / 2
@@ -75,9 +75,9 @@ func _draw():
 ## Snaps the actual value to a multiple of [member Grid2D.cell_size]
 func _set_grid_pixel_size(value: Vector2i, redraw: bool) -> void:
 	@warning_ignore("integer_division")
-	var adjusted_x = max(cell_size.x, int(value.x / cell_size.x) * cell_size.x)
+	var adjusted_x: int = max(cell_size.x, int(value.x / cell_size.x) * cell_size.x)
 	@warning_ignore("integer_division")
-	var adjusted_y = max(cell_size.y, int(value.y / cell_size.y) * cell_size.y)
+	var adjusted_y: int = max(cell_size.y, int(value.y / cell_size.y) * cell_size.y)
 	grid_pixel_size = Vector2i(adjusted_x, adjusted_y)
 	
 	if redraw:
@@ -93,16 +93,16 @@ func get_cell_position(cell: Vector2i, target: CellPosition = CellPosition.CENTE
 		push_error("Cell " + str(cell) + "is not on the grid.")
 		return Vector2i(-1, -1)
 	
-	var cell_origin = cell * cell_size
+	var cell_origin: Vector2i = cell * cell_size
 	match target:
 		CellPosition.CENTER:
 			return cell_origin + cell_size / 2
 		CellPosition.TOP_LEFT:
 			return cell_origin
 		CellPosition.TOP_RIGHT:
-			return cell_origin + Vector2(cell_size.x, 0)
+			return cell_origin + Vector2i(cell_size.x, 0)
 		CellPosition.BOTTOM_LEFT:
-			return cell_origin + Vector2(0, cell_size.y)
+			return cell_origin + Vector2i(0, cell_size.y)
 		CellPosition.BOTTOM_RIGHT:
 			return cell_origin + cell_size
 		_:
@@ -118,8 +118,8 @@ func get_cell_at_position(pos: Vector2) -> Vector2i:
 		push_error("Position" + str(pos) + "is not on the grid.")
 		return Vector2i(-1, -1)
 	
-	var cell_x = int(pos.x / cell_size.x)
-	var cell_y = int(pos.y / cell_size.y)
+	var cell_x: int = int(pos.x / cell_size.x)
+	var cell_y: int = int(pos.y / cell_size.y)
 	return Vector2i(cell_x, cell_y)
 
 
@@ -135,9 +135,9 @@ func snap_point_to_cell(
 		push_error("point" + str(point) + "is not on the grid.")
 		return Vector2i(0, 0)
 	
-	var cell_x = int(point.x / cell_size.x)
-	var cell_y = int(point.y / cell_size.y)
-	var cell_origin = Vector2(cell_x * cell_size.x, cell_y * cell_size.y)
+	var cell_x: int = int(point.x / cell_size.x)
+	var cell_y: int = int(point.y / cell_size.y)
+	var cell_origin: Vector2i = Vector2i(cell_x * cell_size.x, cell_y * cell_size.y)
 	
 	match target:
 		CellPosition.CENTER:
@@ -145,9 +145,9 @@ func snap_point_to_cell(
 		CellPosition.TOP_LEFT:
 			return cell_origin
 		CellPosition.TOP_RIGHT:
-			return cell_origin + Vector2(cell_size.x, 0)
+			return cell_origin + Vector2i(cell_size.x, 0)
 		CellPosition.BOTTOM_LEFT:
-			return cell_origin + Vector2(0, cell_size.y)
+			return cell_origin + Vector2i(0, cell_size.y)
 		CellPosition.BOTTOM_RIGHT:
 			return cell_origin + cell_size
 		_:

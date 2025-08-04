@@ -20,6 +20,10 @@ config/icon="res://images/icon.svg"
 UndoManager="*res://discrete_commands/undo_manager.gd"
 ExecutionManager="*res://misc_scripts/execution_manager.gd"
 
+[debug]
+
+gdscript/warnings/untyped_declaration=2
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/bbcode_edit.editor/plugin.cfg")

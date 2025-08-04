@@ -139,7 +139,7 @@ func get_sprite_color() -> Color:
 func _tween_movement(target: Vector2) -> void:
 	is_moving = true
 	
-	var tween = get_tree().create_tween()
+	var tween: Tween = get_tree().create_tween()
 	tween.tween_property(self, "position", target, move_duration)\
 		.set_trans(move_transition)\
 		.set_ease(move_ease)
@@ -160,7 +160,7 @@ func _tween_arrow(dir: Vector2i) -> void:
 	arrow_line.scale = Vector2(1, 0.1)
 	
 	arrow_line.show()
-	var tween = get_tree().create_tween()
+	var tween: Tween = get_tree().create_tween()
 	tween.tween_property(arrow_line, "scale", Vector2.ONE, move_duration / 2)\
 		.set_trans(arrow_transition)\
 		.set_ease(arrow_ease)
@@ -175,5 +175,5 @@ func _tween_arrow(dir: Vector2i) -> void:
 ## Tweens the [param target]s [member CanvasItem.self_modulate] to the given
 ## [param color] over 0.5 seconds.
 func _tween_color(target: Node2D, color: Color) -> void:
-	var tween = get_tree().create_tween()
+	var tween: Tween = get_tree().create_tween()
 	tween.tween_property(target, "self_modulate", color, 0.5)

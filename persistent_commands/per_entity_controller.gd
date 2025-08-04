@@ -26,5 +26,5 @@ func _send_color_command() -> void:
 	while newColor == entity.get_sprite_color():
 		newColor = entity.colors.pick_random()
 	
-	var params = PerColorCommand.Params.new(newColor)
+	var params := PerColorCommand.Params.new(newColor)
 	color_command.execute(entity, params)

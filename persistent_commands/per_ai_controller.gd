@@ -41,7 +41,7 @@ func _perform_action() -> void:
 
 func _move() -> void:
 	var dir: Vector2i = _get_viable_directions().pick_random()
-	var params = PerMovementCommand.Params.new(dir)
+	var params := PerMovementCommand.Params.new(dir)
 	movement_command.execute(entity, params)
 
 

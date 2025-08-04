@@ -14,7 +14,7 @@ func _input(event: InputEvent) -> void:
 		return
 
 	var command: DiscreteCommand
-	var direction = Vector2i(-2, -2)
+	var direction := Vector2i(-2, -2)
 	if event.is_action_pressed("up"):
 		direction = Vector2i.UP
 	elif event.is_action_pressed("down"):

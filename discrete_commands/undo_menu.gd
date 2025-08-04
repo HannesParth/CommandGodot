@@ -66,9 +66,9 @@ func _on_command_added(new_stack_size: int, new_current_index: int) -> void:
 	_clear_array_elements()
 	
 	for i in new_stack_size:
-		var panel = Panel.new()
+		var panel := Panel.new()
 		panel.custom_minimum_size = Vector2(20, 20)
-		var label = Label.new()
+		var label := Label.new()
 		label.text = str(i)
 		label.set_position(Vector2(4, 1))
 		label.add_theme_font_size_override("font_size", 12)
@@ -101,7 +101,7 @@ func _update_indicator(index: int) -> void:
 		return
 	
 	var element: Panel = array_elements_parent.get_child(index)
-	var pos = element.global_position + Vector2(2.5, 22)
+	var pos := element.global_position + Vector2(2.5, 22)
 	
 	index_indicator.set_global_position(pos)
 	index_indicator.show()
