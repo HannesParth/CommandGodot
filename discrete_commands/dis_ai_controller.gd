@@ -42,10 +42,8 @@ func _perform_action() -> void:
 	var random := actions.pick_random() as Callable
 	var command: DiscreteCommand = random.call()
 	
-	# Execute command
 	command.execute()
 	
-	# Add created command instance to list of executed commands
 	UndoManager.add_executed(command)
 
 

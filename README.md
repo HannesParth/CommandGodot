@@ -76,7 +76,16 @@ This project aims to demonstrate the pattern by implementing two commands of eac
 
 <img src="./docs/images/overview.png" alt="Overview of the main scene" style="max-width: 500px; height: auto;" />
 
+\
 To demonstrate decoupling with the command pattern, each type of command has a `PlayerController` and `AIController`, which generate and/or call the commands to influence an Entity. Note that "AI" here means a repeating timer that executes a random command on timeout.
+
+So, for each type of command, there is an `EntityController` which contains a reference to the Entity it will control and some base properties and functions (for the implementation, see [PerEntityController](./persistent_commands/per_entity_controller.gd) and [DisEntityController](./discrete_commands/dis_entity_controller.gd)). This base class is extended by a `PlayerController` and `AIController`, which create commands for the entity based on user input and a timer respectively.
+<img src="./docs/images/Controller_UML.png" alt ="UML diagram of the Entity-, Player- and AIController" style="max-width: 400px; height: auto;">
+
+> 💡 **Note**: It is best practice in GDScript to prepend an underscore to virtual methods or private methods or properties. See the [style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html#functions-and-variables).
+
+This setup allows the use of a dropdown to choose between each implementation of an `EntityController` for an entity:
+<img src="./docs/images/Entity_Dropdown.png" alt="The Entity Inspector tab in Godot, showing a dropdown to choose the type of EntityController"  style="max-width: 300px; height: auto;">
 
 
 ### Persistent Commands
@@ -122,14 +131,128 @@ class Params:
 	func _init(dir: Vector2i) -> void:
 		direction = dir
 ``` 
-The inner class `Params` is defined with the property `direction`
+The `Params` class is a small pattern that can be kept consistent for any data parameter a specific persistent command needs. The command call to let an entity move to the right could look like this:
+```gdscript
+var params = PerMovementCommand.Params.new(Vector2i.RIGHT)
+movement_command.execute(entity, params)
+```
+So this uses the same instance of the `PerMovementCommand` and creates new `Params` for each movement. This instance is set up in the [PerEntityController](./persistent_commands/per_entity_controller.gd) base class:
+```gdscript
+class_name PerEntityController
+extends Node
+
+var entity: Entity
+
+var movement_command := PerMovementCommand.new()
+var color_command := PerColorCommand.new()
+```
+The [PerPlayerController](./persistent_commands/per_entity_controller.gd) creates the parameters based on the user input, while the [PerAIController](./persistent_commands/per_ai_controller.gd) picks a random direction it is allowed to move in.
+
+\
+**In Summary**
+- Instances of persistent commands are created once when the script is loaded
+- The same instance is used repeatedly
+- That instance's `execute` method is given its parameters each time it is called
+
+While this is more decouped and extensible than calling a method directly, it does not enable systems like Undo/Redo or Command Queues.
+
+
+### Discrete Commands
+These can also be described as 'instanced commands'. Instead of calling one instance of a command over and over with different parameters, you create a distinct command instance for each actual execution (you could say: for each command). \
+Let's look at the differences in the [base class](./discrete_commands/discrete_command.gd):
+```gdscript
+class_name DiscreteCommand
+extends RefCounted
+
+var _entity: Entity
+
+func _init(entity: Entity) -> void:
+	_entity = entity
+
+func execute() -> void:
+	push_error("Command execute not implemented")
+
+func reverse() -> void:
+	push_error("Command reverse not implemented")
+
+```
+With this type of implementation, a single command is only ever meant to use a single set of parameters. Hence, those are not injected with the function call itself, but with the constructor `_init`. \
+Just like the `entity` parameter was separate from the `data` parameter for the `PersistentCommand`, here the `_entity` property is directly declared in the base class.
+
+Having the parameters of a command saved in the command instance gives you the ability to execute it in reverse. \
+The `MovementCommand` [implementation](./discrete_commands/dis_movement_command.gd) for discrete commands serves as an example here:
+```gdscript
+class_name DisMovementCommand
+extends DiscreteCommand
+
+var _direction: Vector2i
+
+func _init(entity: Entity, direction: Vector2i) -> void:
+	super(entity)
+	_direction = direction
+
+func execute() -> void:
+	_entity.move(_direction)
+
+func reverse() -> void:
+	_entity.move(-_direction)
+
+```
+> 💡 **Note**: The `super` keyword inside an overridden function lets you call that function of the inherited class. Inherited classes in GDScript are not called "base" or "parent" classes, but `super classes`. See the [docs](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#inheritance).
+
+Since `_direction` is a simple 2D vector, it can be easily reversed.
+
+The [command](./discrete_commands/dis_color_command.gd) to change the Entity color needed an additional property to enable this:
+```gdscript
+class_name DisColorCommand
+extends DiscreteCommand
+
+var _picked_color: Color
+var _previous_color: Color
+
+func _init(entity: Entity, color: Color) -> void:
+	super(entity)
+	_picked_color = color
+
+func execute() -> void:
+	_previous_color = _entity.get_sprite_color()
+	_entity.set_sprite_color(_picked_color)
+
+func reverse() -> void:
+	_entity.set_sprite_color(_previous_color)
+
+```
+
+
+### Undo/Redo
+With instanced, discrete commands that have a method to reverse their execution, we already have most of what we need to implement a basic Undo/Redo System. \
+To actually know which commands to reverse however, we need to remember them as they get executed. For this, we can implement an undo stack:
+```gdscript
+const MAX_STACK_LENGTH: int = 30
+
+var _current_index: int
+var _executed_commands: Array[DiscreteCommand] = []
+```
+
+> 💡 **Note**: "Stack" describes a data structure (here an Array) that is treated like a literal stack of something. You place something on top of the stack and take from the top of the stack (the [First-In-First-Out](https://www.geeksforgeeks.org/dsa/lifo-last-in-first-out-approach-in-programming/) approach). GDScript supports such a workflow with built-in methods like `append()` and `pop_back()` (see the [docs](https://docs.godotengine.org/en/stable/classes/class_array.html)).
+
+While a limit like `MAX_STACK_LENGTH` should always be implemented, it is unusually small here to allow me to more easily visualize the stack in the UI.
+
+If we wanted to *only* undo commands, we would indeed use `Array.pop_back()` and forget any commands that were undone. However, since we also want to redo commands, we instead remember the `_current_index` we are at. This means:
+- when we undo a command, `_current_index` moves 1 lower in the stack.
+- when we redo a command, it moves 1 higher in the stack.
+- when we execute a *new* command while *not at the top* of the stack, everything in front of `_current_index` is discarded and the new command is added.
+
+As mentioned, the project includes a visualization of the undo stack that is shown when the `ControllerType` of any Entity is set to an implementation of the [DisEntityController](./discrete_commands/dis_entity_controller.gd).\
+In [Project Setup](#project-setup) you can see the visualization as the undo stack fills.
+
+Here it is after some commands were undone:
+<img src="./docs/images/Undo_Vis_Undone.png" alt="Main scene with the visualized undo stack after some commands were undone" style="max-width: 500px; height: auto;" />
+The grey circle representing `_current_index` shows where in the undo stack we currently are. 
 
 
 
 
-Aufbau?
-- was ist die command pattern (core)
-- wofür verwendet man die command pattern (abstrakt und vllt ein paar bsp von wikipedia)
-- Disclaimer
-- Persistent Commands (vllt auch single-instance / variable-input commands)
-- Discrete Commands (vllt auch instanced commands)
+TODO:
+- finish discrete commands chapter
+- undo system chapter

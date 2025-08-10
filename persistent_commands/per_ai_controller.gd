@@ -21,6 +21,8 @@ var directions: Array[Vector2i] = [
 	Vector2i.RIGHT,
 ]
 
+
+## Setting up the [member DisAIController.action_timer]
 func _ready() -> void:
 	action_timer = Timer.new()
 	action_timer.one_shot = false
