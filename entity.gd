@@ -24,6 +24,8 @@ enum ControllerType {
 @export var particles: CPUParticles2D
 
 @export_group("Config")
+## Bool used for manually enabling or disabling an entity without stopping 
+## its process. Used for "pausing" the execution for the undo system.
 @export var enable: bool = true
 @export var move_duration: float = 0.3
 @export var controller_type: ControllerType = ControllerType.PER_AI

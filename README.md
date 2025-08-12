@@ -3,7 +3,7 @@ A clean example implementation of the Command Pattern in Godot 4.4 with added vi
 
 ## Usage and Goal
 This is meant to be a written tutorial explaining the command pattern for [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming). 
-The main priorties are understanding the purpose, core concept and functionality of the pattern.
+The main priorities are understanding the purpose, core concept and functionality of the pattern.
 
 The project has been implemented trying to follow the [SOLID](https://en.wikipedia.org/wiki/SOLID) principles of programming and the [GDScript style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html).
 
@@ -22,16 +22,16 @@ To demonstrate, we have a method:
 func greet() -> void:
     print("Hello World!")
 ```
-We *could* just shove that into a class class and call it a day:
+We *could* just shove that into a class and call it a day:
 ```gdscript
 class_name GreetCommand
 
 func greet() -> void:
     print("Hello World!")
 ```
-But now we only have one object that can do one specific thing which we always have to specifically reference.
+But now we have only one object that can perform a single specific action, which we always have to reference directly.
 
-Now, while GDScript does not have abstract classes and methods *yet*, it does have inheritence:
+Now, while GDScript does not have abstract classes and methods *yet*, it does have inheritance:
 ```gdscript
 class_name Command
 
@@ -49,9 +49,9 @@ func execute() -> void:
 > 💡 **Note**: In GDScript, if inheritance is not explicitly defined (no "extends" was used), the class will implicitly extend `RefCounted` (see the [docs](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#inheritance)).
 
 ### What is it used for?
-Being able to treat a method as an object enables many methodologies, including **Undo/Redo** Functionality, **Command Queues** and **Scheduling**, and **Macro Commands** (Batch Operations).
+Treating a method as an object enables several useful patterns, including **Undo/Redo** Functionality, **Command Queues** and **Scheduling**, and **Macro Commands** (Batch Operations).
 
-Of the SOLID principles, the command pattern innately follows or encourages the Single Responsiblity, Open-closed, and Liskov Substitution principles.
+Of the SOLID principles, the command pattern innately follows or encourages the Single Responsibility, Open–Closed, and Liskov Substitution principles.
 
 General benefits are:
 - **Decoupling**: The object invoking the command doesn't need to know anything about the receiver or how the action is performed.
@@ -62,7 +62,7 @@ The most direct drawbacks are:
 - **Potentially more difficult debugging**: Increased decoupling and abstraction can make debugging harder.
 - **State Management**: If commands can be undone, storing and restoring their state increases complexity and can be error-prone.
 
-Further examples of the patterns usage can be found on its [Wikipedia](https://en.wikipedia.org/wiki/Command_pattern#Uses) page.
+Further examples of the pattern's usage can be found on its [Wikipedia](https://en.wikipedia.org/wiki/Command_pattern#Uses) page.
 
 
 ## Implementing Commands
@@ -77,7 +77,7 @@ This project aims to demonstrate the pattern by implementing two commands of eac
 <img src="./docs/images/overview.png" alt="Overview of the main scene" style="max-width: 500px; height: auto;" />
 
 \
-To demonstrate decoupling with the command pattern, each type of command has a `PlayerController` and `AIController`, which generate and/or call the commands to influence an Entity. Note that "AI" here means a repeating timer that executes a random command on timeout.
+To demonstrate decoupling with the command pattern, each type of command has a `PlayerController` and `AIController`, which generate and/or call the commands to influence an Entity. Note that 'AI' here simply refers to a repeating timer that executes a random command when it times out.
 
 So, for each type of command, there is an `EntityController` which contains a reference to the Entity it will control and some base properties and functions (for the implementation, see [PerEntityController](./persistent_commands/per_entity_controller.gd) and [DisEntityController](./discrete_commands/dis_entity_controller.gd)). This base class is extended by a `PlayerController` and `AIController`, which create commands for the entity based on user input and a timer respectively.
 <img src="./docs/images/Controller_UML.png" alt ="UML diagram of the Entity-, Player- and AIController" style="max-width: 400px; height: auto;">
@@ -89,7 +89,7 @@ This setup allows the use of a dropdown to choose between each implementation of
 
 
 ### Persistent Commands
-This implementation type of commands can also be described as single-instance or variable-input commands. When using one, you invoke the same instance of a command repeatedly, giving the method it encapsules its parameters directly.
+This type of implementation can also be described as single-instance or variable-input commands. When using one, you invoke the same instance of a command repeatedly, giving the method it encapsules its parameters directly.
 
 This commands [base class](./persistent_commands/persistent_command.gd) in this project looks something like this:
 ```gdscript
@@ -104,11 +104,11 @@ func execute(entity: Entity, data: Object = null) -> void:
 
 There are several differences from the first example of a command.
 
-`@warning_ignore("unused_parameter")` does what it says: it makes the compiler ignore the `unused_paramter` warning, removing it from the code editor warnings and the debugger. Many people I know find it easy to ignore warnings in those areas, but I like to keep them clean. \
+`@warning_ignore("unused_parameter")` does what it says: it makes the compiler ignore the `unused_parameter` warning, removing it from the code editor warnings and the debugger. Many people I know find it easy to ignore warnings in those areas, but I like to keep them clean. \
 We ignore this warning because `PersistentCommand` is a base class; the `execute` function is meant to be overridden by its child classes and its parameters are meant for exactly those, not for the base class itself. \
 That `push_error` is there for the same reason. Since we do not have abstract classes or interfaces, it is useful to have something else tell us if we made a mistake when overriding the function.
 
-Now, for the parameters. The setup of this project specifies that all planned commands affect an Entity. Handing its reference over like this is an example of [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection). \
+Now, for the parameters. In this project’s setup, all planned commands affect an Entity. Handing its reference over like this is an example of [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection). \
 On the other hand, `data` is for *everything else* a command might need. To keep this as type safe as possible, [inner classes](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#inner-classes) are used to clearly define the data parameters.
 
 For an example, let's look at the [persistent command implementation for moving an entity](./persistent_commands/per_movement_command.gd):
@@ -154,11 +154,11 @@ The [PerPlayerController](./persistent_commands/per_entity_controller.gd) create
 - The same instance is used repeatedly
 - That instance's `execute` method is given its parameters each time it is called
 
-While this is more decouped and extensible than calling a method directly, it does not enable systems like Undo/Redo or Command Queues.
+While this is more decoupled and extensible than calling a method directly, it does not enable systems like Undo/Redo or Command Queues.
 
 
 ### Discrete Commands
-These can also be described as 'instanced commands'. Instead of calling one instance of a command over and over with different parameters, you create a distinct command instance for each actual execution (you could say: for each command). \
+These can also be described as 'instanced commands'. Instead of repeatedly calling the same command instance with different parameters, you create a distinct command instance for each execution. \
 Let's look at the differences in the [base class](./discrete_commands/discrete_command.gd):
 ```gdscript
 class_name DiscreteCommand
@@ -225,8 +225,8 @@ func reverse() -> void:
 
 
 ### Undo/Redo
-With instanced, discrete commands that have a method to reverse their execution, we already have most of what we need to implement a basic Undo/Redo System. \
-To actually know which commands to reverse however, we need to remember them as they get executed. For this, we can implement an undo stack:
+With instanced, discrete commands that have a method to reverse their execution, we already have most of what we need for a basic Undo/Redo System. \
+To determine which commands to reverse, we need to keep track of them as they are executed. For this, we can implement an undo stack:
 ```gdscript
 const MAX_STACK_LENGTH: int = 30
 
@@ -236,7 +236,7 @@ var _executed_commands: Array[DiscreteCommand] = []
 
 > 💡 **Note**: "Stack" describes a data structure (here an Array) that is treated like a literal stack of something. You place something on top of the stack and take from the top of the stack (the [First-In-First-Out](https://www.geeksforgeeks.org/dsa/lifo-last-in-first-out-approach-in-programming/) approach). GDScript supports such a workflow with built-in methods like `append()` and `pop_back()` (see the [docs](https://docs.godotengine.org/en/stable/classes/class_array.html)).
 
-While a limit like `MAX_STACK_LENGTH` should always be implemented, it is unusually small here to allow me to more easily visualize the stack in the UI.
+While a limit like `MAX_STACK_LENGTH` should always be implemented, it’s intentionally small here to make the stack easier to visualize in the UI.
 
 If we wanted to *only* undo commands, we would indeed use `Array.pop_back()` and forget any commands that were undone. However, since we also want to redo commands, we instead remember the `_current_index` we are at. This means:
 - when we undo a command, `_current_index` moves 1 lower in the stack.
@@ -248,11 +248,45 @@ In [Project Setup](#project-setup) you can see the visualization as the undo sta
 
 Here it is after some commands were undone:
 <img src="./docs/images/Undo_Vis_Undone.png" alt="Main scene with the visualized undo stack after some commands were undone" style="max-width: 500px; height: auto;" />
-The grey circle representing `_current_index` shows where in the undo stack we currently are. 
+The grey circle representing `_current_index` shows our current position in the undo stack. 
 
+Let's look at the command creation of the [DisPlayerController](./discrete_commands/dis_player_controller.gd) as an example:
+```gdscript
+func _input(event: InputEvent) -> void:
+	if event.is_echo():
+		return
+	if !entity.enable:
+		return
 
+	var command: DiscreteCommand
+	var direction := Vector2i(-2, -2)
+	if event.is_action_pressed("up"):
+		direction = Vector2i.UP
+	elif event.is_action_pressed("down"):
+		direction = Vector2i.DOWN
+	elif event.is_action_pressed("left"):
+		direction = Vector2i.LEFT
+	elif event.is_action_pressed("right"):
+		direction = Vector2i.RIGHT
+	elif event.is_action_pressed("color"):
+		command = _send_color_command()
+	
+	if direction != Vector2i(-2, -2):
+		if !entity.can_move_in_direction(direction):
+			return
+		else:
+			command = DisMovementCommand.new(entity, direction)
+	
+	if command == null:
+		return
+	
+	# Execute command
+	command.execute()
+	
+	# Add created command instance to list of executed commands
+	UndoManager.add_executed(command)
+```
+To sum it up:\
+When a movement direction or the 'color' action (set to spacebar in the project settings) is triggered, a new [DiscreteCommand](./discrete_commands/discrete_command.gd) instance is created and assigned to the `command` local variable. Of course, if the entity cannot move in the picked direction (because it is at the border of the grid) or the input was not any of those checked (resulting in `command` being null), the function returns without doing anything.
 
-
-TODO:
-- finish discrete commands chapter
-- undo system chapter
+For the detailed undo/redo implementation, see the [UndoManager](./discrete_commands/undo_manager.gd).
