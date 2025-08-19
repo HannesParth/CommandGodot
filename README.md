@@ -1,8 +1,10 @@
 # CommandGodot
-A clean example implementation of the Command Pattern in Godot 4.4 with added visualizations.
+A clean example implementation of the Command Pattern in Godot with added visualizations.
+
+**Made in Godot 4.4.1**. If 4.5 adds abstract classes, most of the 'base' classes here can be easily adapted.
 
 ## Usage and Goal
-This is meant to be a written tutorial explaining the command pattern for [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming). 
+This is meant to be a written tutorial explaining the command pattern for [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming). \
 The main priorities are understanding the purpose, core concept and functionality of the pattern.
 
 The project has been implemented trying to follow the [SOLID](https://en.wikipedia.org/wiki/SOLID) principles of programming and the [GDScript style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html).
@@ -77,7 +79,7 @@ This project aims to demonstrate the pattern by implementing two commands of eac
 <img src="./docs/images/overview.png" alt="Overview of the main scene" style="max-width: 500px; height: auto;" />
 
 \
-To demonstrate decoupling with the command pattern, each type of command has a `PlayerController` and `AIController`, which generate and/or call the commands to influence an Entity. Note that 'AI' here simply refers to a repeating timer that executes a random command when it times out.
+To demonstrate decoupling with the command pattern, each type of command has a `PlayerController` and `AIController`, which generate and/or call the commands to influence an Entity. Note that 'AI' here simply refers to a repeating timer that executes a random command on timeout.
 
 So, for each type of command, there is an `EntityController` which contains a reference to the Entity it will control and some base properties and functions (for the implementation, see [PerEntityController](./persistent_commands/per_entity_controller.gd) and [DisEntityController](./discrete_commands/dis_entity_controller.gd)). This base class is extended by a `PlayerController` and `AIController`, which create commands for the entity based on user input and a timer respectively.
 <img src="./docs/images/Controller_UML.png" alt ="UML diagram of the Entity-, Player- and AIController" style="max-width: 400px; height: auto;">
@@ -196,7 +198,6 @@ func execute() -> void:
 
 func reverse() -> void:
 	_entity.move(-_direction)
-
 ```
 > 💡 **Note**: The `super` keyword inside an overridden function lets you call that function of the inherited class. Inherited classes in GDScript are not called "base" or "parent" classes, but `super classes`. See the [docs](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#inheritance).
 
@@ -220,7 +221,6 @@ func execute() -> void:
 
 func reverse() -> void:
 	_entity.set_sprite_color(_previous_color)
-
 ```
 
 
