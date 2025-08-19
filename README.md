@@ -3,6 +3,8 @@ A clean example implementation of the Command Pattern in Godot with added visual
 
 **Made in Godot 4.4.1**. If 4.5 adds abstract classes, most of the 'base' classes here can be easily adapted.
 
+Eine deutsche Übersetzung dieser ReadMe gibt es [hier](./docs/German_README.md).
+
 ## Usage and Goal
 This is meant to be a written tutorial explaining the command pattern for [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming). \
 The main priorities are understanding the purpose, core concept and functionality of the pattern.
