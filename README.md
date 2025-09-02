@@ -115,7 +115,7 @@ That `push_error` is there for the same reason. Since we do not have abstract cl
 Now, for the parameters. In this project’s setup, all planned commands affect an Entity. Handing its reference over like this is an example of [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection). \
 On the other hand, `data` is for *everything else* a command might need. To keep this as type safe as possible, [inner classes](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#inner-classes) are used to clearly define the data parameters.
 
-For an example, let's look at the [persistent command implementation for moving an entity](./persistent_commands/per_movement_command.gd):
+For an example, let's look at the persistent command [implementation](./persistent_commands/per_movement_command.gd) for moving an entity:
 ```gdscript
 class_name PerMovementCommand
 extends PersistentCommand
@@ -150,7 +150,7 @@ var entity: Entity
 var movement_command := PerMovementCommand.new()
 var color_command := PerColorCommand.new()
 ```
-The [PerPlayerController](./persistent_commands/per_entity_controller.gd) creates the parameters based on the user input, while the [PerAIController](./persistent_commands/per_ai_controller.gd) picks a random direction it is allowed to move in.
+The [PerPlayerController](./persistent_commands/per_player_controller.gd) creates the parameters based on the user input, while the [PerAIController](./persistent_commands/per_ai_controller.gd) picks a random direction it is allowed to move in.
 
 \
 **In Summary**

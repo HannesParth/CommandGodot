@@ -48,7 +48,7 @@ func execute() -> void:
     print("Hello World!")
 ```
 
-> ￿ **Anmerkung**: In GDScript wird implizit `RefCounted` erweitert, wenn die Vererbung nicht explizit definiert ist (kein "extends" wurde verwendet) (siehe die [docs](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#inheritance)).
+> 💡 **Anmerkung**: In GDScript wird implizit `RefCounted` erweitert, wenn die Vererbung nicht explizit definiert ist (kein "extends" wurde verwendet) (siehe die [docs](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#inheritance)).
 
 ### Wofür wird sie verwendet?
 Eine Methode wie ein Objekt zu behandeln ermöglicht mehrere nützliche Muster, einschließlich **Undo/Redo**-Funktionalität, **Command Queues** und **Scheduling**, und **Macro Commands** (Batch-Operationen).
@@ -77,25 +77,25 @@ Obwohl diese Unterscheidung häufig in Erklärungen des Command Patterns vorkomm
 ### Projekt-Setup
 Dieses Projekt soll das Pattern demonstrieren, indem zwei Commands jedes Typs implementiert werden (ein `Movement`- und ein `Color`-Command), die beide Instanzen einer `Entity` beeinflussen, die sich auf einem 2D-Raster bewegt. Außerdem wird ein einfaches Undo/Redo-System implementiert, das für bessere Verständlichkeit visualisiert wird.
 
-<img src="./docs/images/overview.png" alt="Übersicht der Hauptszene" style="max-width: 500px; height: auto;" />
+<img src="./images/overview.png" alt="Übersicht der Hauptszene" style="max-width: 500px; height: auto;" />
 
 \
 Um Entkopplung mit dem Command Pattern zu demonstrieren, hat jeder Command-Typ einen `PlayerController` und einen `AIController`, der die Commands generiert und/oder aufruft, um eine Entity zu beeinflussen. „AI“ bezieht sich hier lediglich auf einen wiederholten Timer, der bei Ablauf einen zufälligen Command ausführt.
 
-Für jeden Command-Typ gibt es also einen `EntityController`, der eine Referenz auf die zu steuernde Entity sowie einige Basis-Properties und -Funktionen enthält (für die Implementierung siehe [PerEntityController](./persistent_commands/per_entity_controller.gd) und [DisEntityController](./discrete_commands/dis_entity_controller.gd)). Diese Basisklasse wird durch einen `PlayerController` und `AIController` erweitert, die jeweils basierend auf User Input bzw. einem Timer Commands für die Entity erzeugen.
-<img src="./docs/images/Controller_UML.png" alt="UML-Diagramm des Entity-, Player- und AIControllers" style="max-width: 400px; height: auto;">
+Für jeden Command-Typ gibt es also einen `EntityController`, der eine Referenz auf die zu steuernde Entity sowie einige Basis-Properties und -Funktionen enthält (für die Implementierung siehe [PerEntityController](../persistent_commands/per_entity_controller.gd) und [DisEntityController](../discrete_commands/dis_entity_controller.gd)). Diese Basisklasse wird durch einen `PlayerController` und `AIController` erweitert, die jeweils basierend auf User Input bzw. einem Timer Commands für die Entity erzeugen.
+<img src="./images/Controller_UML.png" alt="UML-Diagramm des Entity-, Player- und AIControllers" style="max-width: 400px; height: auto;">
 
 > 💡 **Hinweis**: In GDScript ist es Best Practice, virtuellen Methoden oder privaten Methoden und Properties einen Unterstrich voranzustellen. Siehe den [Style Guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html#functions-and-variables).
 
 Dieses Setup ermöglicht die Verwendung eines Dropdown-Menüs, um zwischen den Implementierungen eines `EntityController` für eine Entity zu wählen:
-<img src="./docs/images/Entity_Dropdown.png" alt="Der Entity-Inspector-Tab in Godot, der ein Dropdown-Menü zur Auswahl des EntityControllers zeigt"  style="max-width: 300px; height: auto;">
+<img src="./images/Entity_Dropdown.png" alt="Der Entity-Inspector-Tab in Godot, der ein Dropdown-Menü zur Auswahl des EntityControllers zeigt"  style="max-width: 300px; height: auto;">
 
 
 
 ### Persistente Commands
 Diese Art der Implementierung kann auch als Single-Instance- oder Variable-Input-Commands beschrieben werden. Bei ihrer Verwendung wird dieselbe Instanz eines Commands wiederholt aufgerufen, wobei die gekapselte Methode ihre Parameter direkt übergeben bekommt.
 
-Die [Basisklasse](./persistent_commands/persistent_command.gd) dieser Commands sieht in diesem Projekt ungefähr so aus:  
+Die [Basisklasse](../persistent_commands/persistent_command.gd) dieser Commands sieht in diesem Projekt ungefähr so aus:  
 ```gdscript
 class_name PersistentCommand
 extends RefCounted
@@ -115,7 +115,7 @@ Das `push_error` ist dort aus demselben Grund. Da wir keine abstrakten Klassen o
 Nun zu den Parametern. Dem Setup des Projects nach beeinflussen alle geplanten Commands eine Entity. Ihre Referenz so zu übergeben ist ein Beispiel für [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection). \
 `data` hingegen ist für *alles andere* gedacht, was ein Command eventuell benötigt. Um dies so typsicher wie möglich zu halten, werden [innere Klassen](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#inner-classes) verwendet, um die Datenparameter klar zu definieren.
 
-Als Beispiel schauen wir uns die [Implementierung eines persistenten Commands zum Bewegen einer Entity](./persistent_commands/per_movement_command.gd) an:  
+Als Beispiel schauen wir uns die [Implementierung](../persistent_commands/per_movement_command.gd) eines persistenten Commands zum Bewegen einer Entity an:  
 ```gdscript
 class_name PerMovementCommand
 extends PersistentCommand
@@ -140,7 +140,7 @@ Die `Params`-Klasse ist ein kleines Pattern, das für jeden Datenparameter, den 
 var params = PerMovementCommand.Params.new(Vector2i.RIGHT)
 movement_command.execute(entity, params)
 ```
-Dabei wird dieselbe Instanz des `PerMovementCommand` verwendet und für jede Bewegung ein neues `Params` erzeugt. Diese Instanz wird in der Basisklasse [PerEntityController](./persistent_commands/per_entity_controller.gd) aufgesetzt:  
+Dabei wird dieselbe Instanz des `PerMovementCommand` verwendet und für jede Bewegung ein neues `Params` erzeugt. Diese Instanz wird in der Basisklasse [PerEntityController](../persistent_commands/per_entity_controller.gd) aufgesetzt:  
 ```gdscript
 class_name PerEntityController
 extends Node
@@ -150,7 +150,7 @@ var entity: Entity
 var movement_command := PerMovementCommand.new()
 var color_command := PerColorCommand.new()
 ```
-Der [PerPlayerController](./persistent_commands/per_entity_controller.gd) erzeugt die Parameter basierend auf der Nutzereingabe, während der [PerAIController](./persistent_commands/per_ai_controller.gd) eine zufällige Richtung auswählt, in die er sich bewegen darf.
+Der [PerPlayerController](../persistent_commands/per_player_controller.gd) erzeugt die Parameter basierend auf der Nutzereingabe, während der [PerAIController](../persistent_commands/per_ai_controller.gd) eine zufällige Richtung auswählt, in die er sich bewegen darf.
 
 \
 **Zusammenfassung**
@@ -163,7 +163,7 @@ Obwohl dies stärker entkoppelt und erweiterbarer ist als das direkte Aufrufen e
 
 ### Diskrete Commands
 Diese können auch als 'instanzierte Commands' beschrieben werden. Anstatt dieselbe Command-Instanz mit unterschiedlichen Parametern wiederholt aufzurufen, wird für jede Ausführung eine eigene Command-Instanz erzeugt. \
-Schauen wir uns die Unterschiede in der [Basisklasse](./discrete_commands/discrete_command.gd) an:  
+Schauen wir uns die Unterschiede in der [Basisklasse](../discrete_commands/discrete_command.gd) an:  
 ```gdscript
 class_name DiscreteCommand
 extends RefCounted
@@ -184,7 +184,7 @@ Bei dieser Art der Implementierung ist ein einzelnes Command immer nur für eine
 So wie beim `PersistentCommand` der `entity`-Parameter vom `data`-Parameter getrennt war, wird hier die Property `_entity` direkt in der Basisklasse deklariert.
 
 Da die Parameter eines Commands in der Command-Instanz selbst gespeichert sind, erhält man die Möglichkeit, ihn auch umgekehrt auszuführen. \
-Die [Implementierung](./discrete_commands/dis_movement_command.gd) des `MovementCommand` für diskrete Commands dient hier als Beispiel:  
+Die [Implementierung](../discrete_commands/dis_movement_command.gd) des `MovementCommand` für diskrete Commands dient hier als Beispiel:  
 ```gdscript
 class_name DisMovementCommand
 extends DiscreteCommand
@@ -205,7 +205,7 @@ func reverse() -> void:
 
 Da `_direction` ein einfacher 2D-Vektor ist, kann er leicht umgekehrt werden.
 
-Das [Command](./discrete_commands/dis_color_command.gd) zum Ändern der Entity-Farbe benötigte dafür eine zusätzliche Property:  
+Das [Command](../discrete_commands/dis_color_command.gd) zum Ändern der Entity-Farbe benötigte dafür eine zusätzliche Property:  
 ```gdscript
 class_name DisColorCommand
 extends DiscreteCommand
@@ -245,14 +245,14 @@ Wenn wir *nur* Undo implementieren wollten, würden wir auch tatsächlich `Array
 - wenn wir ein Command wiederholen (Redo), bewegt er sich um 1 nach oben.  
 - wenn wir ein *neues* Command ausführen, während wir *nicht am oberen Ende* des Stacks sind, wird alles vor `_current_index` verworfen und das neue Command hinzugefügt.  
 
-Wie erwähnt enthält das Projekt eine Visualisierung des Undo-Stacks, die angezeigt wird, wenn der `ControllerType` einer Entity auf eine Implementierung des [DisEntityController](./discrete_commands/dis_entity_controller.gd) gesetzt wird. \
+Wie erwähnt enthält das Projekt eine Visualisierung des Undo-Stacks, die angezeigt wird, wenn der `ControllerType` einer Entity auf eine Implementierung des [DisEntityController](../discrete_commands/dis_entity_controller.gd) gesetzt wird. \
 Im Abschnitt [Projekt-Setup](#project-setup) kann man einen teilweise gefüllten Undo-Stack sehen.
 
 So sieht es aus, nachdem einige Commands rückgängig gemacht wurden:
-<img src="./docs/images/Undo_Vis_Undone.png" alt="Hauptszene mit visualisiertem Undo-Stack, nachdem einige Commands rückgängig gemacht wurden" style="max-width: 500px; height: auto;" />  
+<img src="./images/Undo_Vis_Undone.png" alt="Hauptszene mit visualisiertem Undo-Stack, nachdem einige Commands rückgängig gemacht wurden" style="max-width: 500px; height: auto;" />  
 Der graue Kreis, der `_current_index` repräsentiert, zeigt unsere aktuelle Position im Undo-Stack.  
 
-Schauen wir uns als Beispiel die Command-Erzeugung im [DisPlayerController](./discrete_commands/dis_player_controller.gd) an:  
+Schauen wir uns als Beispiel die Command-Erzeugung im [DisPlayerController](../discrete_commands/dis_player_controller.gd) an:  
 ```gdscript
 func _input(event: InputEvent) -> void:
 	if event.is_echo():
@@ -290,6 +290,6 @@ func _input(event: InputEvent) -> void:
 ```
 
 Zusammengefasst:  
-Wenn eine Bewegungsrichtung oder die „color“-Aktion (im Projekt auf die Leertaste gelegt) ausgelöst wird, wird eine neue Instanz eines [DiscreteCommand](./discrete_commands/discrete_command.gd) erzeugt und der lokalen Variable `command` zugewiesen. Natürlich gilt: wenn sich die Entity nicht in die gewählte Richtung bewegen kann (weil sie am Rand des Rasters steht) oder die Eingabe nicht zu den geprüften Aktionen gehört (wodurch `command` null bleibt), wird die Funktion beendet ohne etwas zu tun.  
+Wenn eine Bewegungsrichtung oder die „color“-Aktion (im Projekt auf die Leertaste gelegt) ausgelöst wird, wird eine neue Instanz eines [DiscreteCommand](../discrete_commands/discrete_command.gd) erzeugt und der lokalen Variable `command` zugewiesen. Natürlich gilt: wenn sich die Entity nicht in die gewählte Richtung bewegen kann (weil sie am Rand des Rasters steht) oder die Eingabe nicht zu den geprüften Aktionen gehört (wodurch `command` null bleibt), wird die Funktion beendet ohne etwas zu tun.  
 
-Für die detaillierte Undo/Redo-Implementierung siehe den [UndoManager](./discrete_commands/undo_manager.gd).
+Für die detaillierte Undo/Redo-Implementierung siehe den [UndoManager](../discrete_commands/undo_manager.gd).
