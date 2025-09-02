@@ -3,8 +3,8 @@ extends DisEntityController
 ## Player input based implementation of the [DisEntityController].
 ##
 ## This implementation takes the players input through the [method Node._input]
-## method to create [DiscreteCommand] instances, which are then executed and 
-## added to the Undo Stack.
+## method to create [DiscreteCommand] instances, which are then added to the
+## Command queue to be executed there.
 
 
 func _input(event: InputEvent) -> void:
@@ -37,8 +37,4 @@ func _input(event: InputEvent) -> void:
 	if command == null:
 		return
 	
-	# Execute command
-	command.execute()
-	
-	# Add created command instance to list of executed commands
-	UndoManager.add_executed(command)
+	CommandQueue.append(command)

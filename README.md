@@ -282,13 +282,21 @@ func _input(event: InputEvent) -> void:
 	if command == null:
 		return
 	
-	# Execute command
-	command.execute()
-	
-	# Add created command instance to list of executed commands
-	UndoManager.add_executed(command)
+	CommandQueue.append(command)
 ```
-To sum it up:\
 When a movement direction or the 'color' action (set to spacebar in the project settings) is triggered, a new [DiscreteCommand](./discrete_commands/discrete_command.gd) instance is created and assigned to the `command` local variable. Of course, if the entity cannot move in the picked direction (because it is at the border of the grid) or the input was not any of those checked (resulting in `command` being null), the function returns without doing anything.
+
+As an example of decoupling command creation and execution, the command instance is not executed immediately. Instead, it is added to the minimalistic [CommandQueue](./discrete_commands/command_queue.gd), which executes all queued commands every physics frame:
+```gdscript
+func _physics_process(_delta: float) -> void:
+	process_queue()
+
+func process_queue() -> void:
+	for cmd in _queue:
+		cmd.execute()
+		UndoManager.add_executed(cmd)
+	_queue.clear()
+```
+Decoupled execution like this can be used for e.g. delayed/scheduled execution, network synchonization or diverse automation tasks.
 
 For the detailed undo/redo implementation, see the [UndoManager](./discrete_commands/undo_manager.gd).

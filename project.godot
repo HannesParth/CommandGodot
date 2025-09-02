@@ -19,6 +19,7 @@ config/icon="res://images/icon.svg"
 
 UndoManager="*res://discrete_commands/undo_manager.gd"
 ExecutionManager="*res://misc_scripts/execution_manager.gd"
+CommandQueue="*res://discrete_commands/command_queue.gd"
 
 [debug]
 

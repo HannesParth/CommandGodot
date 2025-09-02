@@ -32,8 +32,8 @@ func _ready() -> void:
 	action_timer.start()
 
 
-## Gets a random commands from the given actions, executes it
-## and adds it to the Undo Stack.
+## Gets a random commands from the given actions
+## and adds it to the Command Queue.
 func _perform_action() -> void:
 	if !entity.enable:
 		return
@@ -42,9 +42,7 @@ func _perform_action() -> void:
 	var random := actions.pick_random() as Callable
 	var command: DiscreteCommand = random.call()
 	
-	command.execute()
-	
-	UndoManager.add_executed(command)
+	CommandQueue.append(command)
 
 
 func _move() -> DisMovementCommand:

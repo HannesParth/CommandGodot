@@ -289,7 +289,19 @@ func _input(event: InputEvent) -> void:
 	UndoManager.add_executed(command)
 ```
 
-Zusammengefasst:  
 Wenn eine Bewegungsrichtung oder die „color“-Aktion (im Projekt auf die Leertaste gelegt) ausgelöst wird, wird eine neue Instanz eines [DiscreteCommand](../discrete_commands/discrete_command.gd) erzeugt und der lokalen Variable `command` zugewiesen. Natürlich gilt: wenn sich die Entity nicht in die gewählte Richtung bewegen kann (weil sie am Rand des Rasters steht) oder die Eingabe nicht zu den geprüften Aktionen gehört (wodurch `command` null bleibt), wird die Funktion beendet ohne etwas zu tun.  
+
+Als ein Beispiel der Entkopplung von Command-Erstellung und -Ausführung wird die Command-Instanz nicht sofort ausgeführt. Stattdessen wird sie der minimalistischen [CommandQueue](../discrete_commands/command_queue.gd) hinzugefügt, welche alle gesammelten Commands jeden Physics-Frame ausführt:
+```gdscript
+func _physics_process(_delta: float) -> void:
+	process_queue()
+
+func process_queue() -> void:
+	for cmd in _queue:
+		cmd.execute()
+		UndoManager.add_executed(cmd)
+	_queue.clear()
+```
+Eine derart entkoppelte Ausführung kann beispielsweise für verzögerte/geplante Ausführung, Netzwerksynchronisation oder verschiedene Automatisierungsaufgaben genutzt werden.
 
 Für die detaillierte Undo/Redo-Implementierung siehe den [UndoManager](../discrete_commands/undo_manager.gd).
